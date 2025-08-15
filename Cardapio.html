@@ -27,10 +27,9 @@
       text-align: center;
     }
 
-  .logo {
-      width: auto;  
-      height: auto; 
+    .logo {
       max-width: 100%;
+      height: auto; 
       border-radius: 0%;
       object-fit: cover;
       border: 4px solid #ffffff;
@@ -56,6 +55,16 @@
       border-radius: 12px;
       background: #fff0e0;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    /* Efeito de expansão ao passar o mouse */
+    .item:hover,
+    .item.touch-active {
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      background: #ffe0cc;
     }
 
     .item h3 {
@@ -112,6 +121,52 @@
       font-size: 14px;
       color: #8d6e63;
     }
+
+    /* Modal responsivo */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 10px;
+      max-width: 100%;
+      width: 420px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .modal video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 16px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -120,17 +175,17 @@
     <img src="Logo.png" alt="Cachorro-quente" class="logo">
     <p class="description">O melhor cachorro-quente da cidade! Entregamos rápido e quentinho na sua porta 🍞🌭🔥</p>
 
-    <div class="item">
+    <div class="item" data-video="dog-simples.mp4">
       <h3>Dog Simples <span class="preco">R$ 16,00</span></h3>
       <p>Pão de Leite, 1 Salsicha, tomate, batata palha, catchup, maionese e mostarda</p>
     </div>
 
-    <div class="item">
+    <div class="item" data-video="dog-duplo.mp4">
       <h3>Dog Duplo <span class="preco">R$ 18,00</span></h3>
       <p>Pão de Leite, 02 Salsichas, tomate, batata palha, catchup, maionese e mostarda</p>
     </div>
 
-    <div class="item">
+    <div class="item" data-video="dog-especial.mp4">
       <h3>Dog Especial <span class="preco">R$ 24,00</span></h3>
       <p>Pão de Leite, 02 Salsichas, tomate, batata palha, bacon, catupiry, catchup, maionese e mostarda</p>
     </div>
@@ -144,11 +199,54 @@
     <div class="buttons">
       <a href="https://wa.me/18996850747?text=Olá%2C%20gostaria%20de%20fazer%20um%20pedido" target="_blank">
         Peça já o seu! Ou venha desfrutar da experiência👇
-      <a href="Index.html" target=>Voltar</a>
+      </a>
+      <a href="index.html">Voltar</a>
     </div>
 
     <footer>© 2025 HOTDOG Prensado do Ricardo</footer>
   </div>
+
+  <!-- Modal -->
+  <div id="videoModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div class="modal-content">
+      <video id="modalVideo" controls></video>
+    </div>
+  </div>
+
+  <script>
+    const items = document.querySelectorAll('.item[data-video]');
+    const modal = document.getElementById('videoModal');
+    const modalVideo = document.getElementById('modalVideo');
+
+    // Efeito no mobile (touch)
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        items.forEach(i => i.classList.remove('touch-active'));
+        item.classList.add('touch-active');
+        openModal(item.getAttribute('data-video'));
+      });
+    });
+
+    function openModal(videoSrc) {
+      modal.style.display = 'flex';
+      modalVideo.src = videoSrc;
+      modalVideo.play();
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+      modalVideo.pause();
+      modalVideo.currentTime = 0;
+    }
+
+    // Fechar modal ao clicar fora
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+  </script>
 
 </body>
 </html>
